@@ -55,7 +55,7 @@ class Cell {
 
   reveal(x,y) {
     if (!this.isRevealed) {
-      calculateValue(x, y)
+      calculateValue(x,y)
       this.isRevealed = true;
     }
   }
