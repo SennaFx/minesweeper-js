@@ -1,5 +1,5 @@
-const cols = 15;
-const rows = 15;
+const cols = 10;
+const rows = 10;
 let size = 0;
 let firstClick = true;
 
@@ -60,13 +60,13 @@ function draw() {
   background(51);
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
-      cells[i][j].show();
+      cells[i][j].show(i,j);
     }
   }
 }
 
 function generateMine() {
-  let mines = 10;
+  let mines = 20;
   while (mines > 0) {
     const randomX = floor(random(rows));
     const randomY = floor(random(cols));

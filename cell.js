@@ -8,14 +8,16 @@ class Cell {
     this.value = 0;
   }
 
-  show() {
-    // fill the rects with white color
-    fill(255);
+  show(x, y) {
+    // fill the rects in a xadrez pattern
+    let ind = x + y;
+    if (ind % 2 === 0) fill(74, 20, 140);
+    else fill(124, 67, 189);
     if (this.isRevealed && !this.isMine && this.value === 0) {
       /*
        * if player has clicked and it's an empty space
        */
-      fill(255, 0, 0);
+      fill(18, 0, 94);
       rect(this.x, this.y, size, size);
       /*
        *
@@ -24,8 +26,9 @@ class Cell {
       /*
        * if player has clicked and it contains a mine next to it
        */
+      fill(18, 0, 94);
       rect(this.x, this.y, size, size);
-      fill(51);
+      fill(255);
       textSize(size / 2);
       textAlign(CENTER, CENTER);
       text(this.value, this.x + this.size / 2, this.y + this.size / 2);
@@ -33,11 +36,11 @@ class Cell {
        *
        */
     } else if (this.isMine) {
-      /* if player has clicked and it's a mine
-       *
+      /*
+       * if player has clicked and it's a mine
        */
       rect(this.x, this.y, size, size);
-      fill(52);
+      fill(255, 0, 0);
       ellipse(
         this.x + this.size / 2,
         this.y + this.size / 2,
@@ -53,9 +56,9 @@ class Cell {
     }
   }
 
-  reveal(x,y) {
+  reveal(x, y) {
     if (!this.isRevealed) {
-      calculateValue(x,y)
+      calculateValue(x, y);
       this.isRevealed = true;
     }
   }
