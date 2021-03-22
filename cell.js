@@ -62,6 +62,7 @@ class Cell {
     if (!this.isRevealed) {
       if (!cells[x][y].isMine) calculateValue(x, y);
       this.isRevealed = true;
+      count++;
     }
   }
 

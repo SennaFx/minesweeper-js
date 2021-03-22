@@ -1,12 +1,14 @@
-const cols = 20;
-const rows = 20;
+const cols = 10;
+const rows = 10;
 let size = 0;
 let firstClick = true;
 let gameOver = false;
+let count = 0;
+let totalMines = 20;
 
 function startGame() {
   firstClick = true;
-
+  count = 0;
   cells = new Array(rows);
   for (let i = 0; i < rows; i++) {
     cells[i] = new Array(cols);
@@ -21,16 +23,37 @@ function startGame() {
   gameOver = false;
 }
 
+function showBombs() {
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      let cell = cells[i][j];
+      if (cell.isMine) cell.reveal();
+    }
+  }
+}
+
 function die() {
-  gameOver = true;
-  alert("you died!");
-  startGame();
+  showBombs();
+  setTimeout(() => {
+    gameOver = true;
+    alert("you died!");
+    startGame();
+  }, 200);
+}
+
+function win() {
+  showBombs();
+  setTimeout(() => {
+    gameOver = true;
+    alert("congrats!");
+    startGame();
+  }, 200);
 }
 
 function setup() {
   createCanvas(800, 800);
-  frameRate(10)
-  size = width / rows;
+  frameRate(10);
+  size = floor(width / rows);
   startGame();
 }
 
@@ -58,11 +81,16 @@ function mouseClicked() {
 
   if (!cell.isRevealed) {
     cell.reveal();
+    console.log(count);
     if (cell.isMine) {
       die();
       return;
     }
     if (cell.value == 0) findNext(x, y);
+  }
+
+  if (count == rows * cols - totalMines) {
+    win();
   }
 }
 
@@ -83,6 +111,7 @@ function findNext(ax, ay) {
       }
     }
   }
+
   if (t.length == 0) return;
   t.forEach((cell) => {
     findNext(cell.x / size, cell.y / size);
@@ -92,18 +121,16 @@ function findNext(ax, ay) {
 function draw() {
   background(51);
   if (!gameOver) {
-    {
-      for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < cols; j++) {
-          cells[i][j].show(i, j);
-        }
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        cells[i][j].show(i, j);
       }
     }
   }
 }
 
 function generateMine(x, y) {
-  let mines = 50;
+  let mines = totalMines;
   while (mines > 0) {
     let rndX = floor(random(rows));
     let rndY = floor(random(cols));
