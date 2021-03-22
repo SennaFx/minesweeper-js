@@ -9,7 +9,7 @@ class Cell {
   }
 
   show(x, y) {
-    // fill the rects in a xadrez pattern
+    // fill the rects in xadrez pattern
     let ind = x + y;
     if (ind % 2 === 0) fill(74, 20, 140);
     else fill(124, 67, 189);
@@ -35,7 +35,7 @@ class Cell {
       /*
        *
        */
-    } else if (this.isMine) {
+    } else if (this.isMine && this.isRevealed) {
       /*
        * if player has clicked and it's a mine
        */
@@ -56,9 +56,11 @@ class Cell {
     }
   }
 
-  reveal(x, y) {
+  reveal() {
+    let x = this.x / size;
+    let y = this.y / size;
     if (!this.isRevealed) {
-      calculateValue(x, y);
+      if (!cells[x][y].isMine) calculateValue(x, y);
       this.isRevealed = true;
     }
   }
