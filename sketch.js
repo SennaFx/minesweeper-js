@@ -62,8 +62,8 @@ function calculateValue(mx, my) {
     for (let j = -1; j <= 1; j++) {
       let x = mx + i;
       let y = my + j;
-      if (x >= rows || x < 0 || y >= cols || y < 0) continue;
-      if (cells[x][y].isMine) cells[mx][my].value++;
+      if (check(x, y) || !cells[x][y].isMine) continue;
+      cells[mx][my].value++;
     }
   }
 }
@@ -77,8 +77,8 @@ function mouseClicked() {
     generateMine(x, y);
     firstClick = false;
   }
-  let cell = cells[x][y];
 
+  let cell = cells[x][y];
   if (!cell.isRevealed) {
     cell.reveal();
     console.log(count);
@@ -89,9 +89,7 @@ function mouseClicked() {
     if (cell.value == 0) findNext(x, y);
   }
 
-  if (count == rows * cols - totalMines) {
-    win();
-  }
+  if (count == rows * cols - totalMines) win();
 }
 
 function findNext(ax, ay) {
@@ -102,13 +100,11 @@ function findNext(ax, ay) {
       let x = ax + i;
       let y = ay + j;
 
-      if (x >= rows || x < 0 || y >= cols || y < 0) continue;
-      if (cells[x][y].isRevealed) continue;
+      if (check(x, y) || cells[x][y].isRevealed || cells[x][y].isMine)
+        continue;
 
-      if (!cells[x][y].isMine) {
-        cells[x][y].reveal();
-        if ((x != ax || y != ay) && cells[x][y].value == 0) t.push(cells[x][y]);
-      }
+      cells[x][y].reveal();
+      if ((x != ax || y != ay) && cells[x][y].value == 0) t.push(cells[x][y]);
     }
   }
 
@@ -135,12 +131,16 @@ function generateMine(x, y) {
     let rndX = floor(random(rows));
     let rndY = floor(random(cols));
 
-    // distance = squareroot((x - randomy)^2 + (y - randomY)^2)
+    // distance = squareroot((x - randomX)^2 + (y - randomY)^2)
     let distance = Math.sqrt((x - rndX) * (x - rndX) + (y - rndY) * (y - rndY));
-
-    if (distance < 1.5) continue;
+    if (distance < 2) continue;
     if (cells[rndX][rndY].makeMine()) {
       mines--;
     }
   }
+}
+
+function check(x, y) {
+  if (x >= rows || x < 0 || y >= cols || y < 0) return true;
+  else return false;
 }
